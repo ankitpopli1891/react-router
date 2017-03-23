@@ -1,5 +1,12 @@
 import React, { PropTypes } from 'react'
 
+
+const getConfig = ({push, from, to}) => {
+  return {
+    push, from, to
+  }
+}
+
 /**
  * The public API for updating the location programatically
  * with a component.
@@ -38,6 +45,17 @@ class Redirect extends React.Component {
   }
 
   componentDidMount() {
+    if (!this.isStatic())
+      this.perform()
+  }
+
+  shouldComponentUpdate(nextProps) {
+    // this should be slow as heck,
+    // will change the implementation asap once validated
+    return JSON.stringify(getConfig(this.props)) !== JSON.stringify(getConfig(nextProps));
+  }
+
+  componentDidUpdate() {
     if (!this.isStatic())
       this.perform()
   }
